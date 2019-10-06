@@ -1,0 +1,673 @@
+@name SmartHotel v2
+@inputs EGP:wirelink User:entity Expire1 Expire2 Expire3 Expire4 Expire5
+@outputs Name:string Is1:array Is2:array Is3:array Is4:array Is5:array Sell
+@persist Cost News:string ClosestPlayer:entity Stage Roomtexts:array Min Dyn Up Cart Guard Bought:array LastUser:entity Sys Money Chain
+if( User & User) {
+ LastUser = User   
+}
+if(first()) {
+########CONFIG#######
+Name = "iHS Hotels"  #The name of the hotel. (For example iHotel)
+Cost = 1000         #Cost of each room for 30min
+News = "The iHS is on its 2nd version!"
+Roomtexts = array(
+#This is the one-line description for each room seen on the 2nd stage.
+#Room 1
+"A small windowless room on the 1st floor"
+#Room 2
+,"A normal room on the 2nd floor"
+#Room 3
+,"A normal room on the 3rd floor"
+#Room 4
+,"A slightly smaller normal room on the 4th floor"
+#Room 5
+,"A two floor high room on the 5th floor.")
+#######CONFIG ENDS HERE#######
+#NOTE: Changing these values might break the e2. Its not recommended to change them.
+#If you accidentally changed them, they are:
+#Bought = array(0,0,0,0,0) 
+#Sell = Cost * 0.25 
+#Stage = 1 
+#Min = 15 
+#Up = 15 
+#Dyn = Min
+###########
+Bought = array(0,0,0,0,0) #what rooms are bought. 1 = bought. DO NOT CHANGE.
+#Sell = Cost * 0.25 #sell amount
+Stage = 1 #what stage youre when you start. DO NOT CHANGE
+Min = 30 #The minimum and starting value on the 2nd screen (changing might break e2, havent tested)
+Up = 15 # How much the - and + increase or decrease the value on 2nd screen. Please have this as a EVEN number.
+Dyn = Min #Dynamic value of minutes rented. DO NOT TOUCH
+function number wirelink:onClick(Player:entity,ID){
+        local P=This:egpPos(ID)
+        local H=This:egpSize(ID)/2
+        return inrange(This:egpCursor(Player),P-H,P+H)
+}
+timer("tick",100)
+Chain = 1
+}
+
+if(Chain) {
+if(clk("tick")) {
+function start() { 
+    Dyn = Min   
+    EGP:egpClear()
+    EGP:egpBox(1,vec2(256,256),vec2(512,2048))
+    EGP:egpMaterial(1,"gui/gradient_down")
+    EGP:egpColor(1,vec(145,0,255)) 
+    EGP:egpTextLayout(2,Name,vec2(0,20),vec2(512,200))
+    EGP:egpAlign(2,1,1)
+    EGP:egpSize(2,100)
+    EGP:egpLine(3,vec2(62,256),vec2(450,256))
+    EGP:egpRoundedBox(4,vec2(256,350),vec2(250,75))
+    EGP:egpColor(4,vec(40,40,40))
+    EGP:egpTextLayout(5,"Welcome to " + Name + "! Click here to continue.",vec2(156,330),vec2(206,370))
+    EGP:egpText(200,News,vec2(256,25))
+    EGP:egpAlign(200,1,1)
+    EGP:egpColor(200,vec(255,167,0))
+}
+timer("tick2",100) 
+}
+if(clk("tick2")) {
+function system() {
+    EGP:egpClear()
+    EGP:egpBox(1,vec2(256,256),vec2(512,2048))
+    EGP:egpMaterial(1,"gui/gradient_down")
+    EGP:egpColor(1,vec(145,0,255))   
+    EGP:egpRoundedBox(6,vec2(256,246),vec2(412,412))
+    EGP:egpColor(6,vec(75,75,75))
+    EGP:egpCircle(2,vec2(75,75),vec2(50,50))
+    EGP:egpColor(2,vec(35,35,35))
+    EGP:egpRoundedBox(3,vec2(75,256),vec2(50,400))
+    EGP:egpColor(3,vec(35,35,35))
+    EGP:egpBox(101,vec2(75,435),vec2(30,30))
+    EGP:egpColor(101,vec(35,35,35))
+    EGP:egpText(100,"<",vec2(75,432))
+    EGP:egpSize(100,60)
+    EGP:egpAlign(100,1,1)
+    EGP:egpText(200,News,vec2(256,25))
+    EGP:egpAlign(200,1,1)
+    EGP:egpColor(200,vec(255,167,0))
+    if(Stage == 1) {
+        EGP:egpCircle(7,vec2(75,75),vec2(40,40))
+        EGP:egpColor(7,vec(145,0,255))
+        EGP:egpText(5,"1",vec2(75,75))
+        EGP:egpAlign(5,1,1)
+        EGP:egpSize(5,40)
+        EGP:egpTextLayout(8,"Terms and conditions",vec2(75,50),vec2(412,100))
+        EGP:egpAlign(8,1,1)
+        EGP:egpSize(8,50)
+        EGP:egpRoundedBox(9,vec2(286,206),vec2(250,70))
+        EGP:egpColor(9,vec(35,35,35))
+        EGP:egpRoundedBox(10,vec2(286,286),vec2(250,70))
+        EGP:egpColor(10,vec(45,45,45))
+        EGP:egpRoundedBox(11,vec2(286,366),vec2(250,70))
+        EGP:egpColor(11,vec(55,55,55))
+        EGP:egpTextLayout(12,"1. All rooms are non-refundable but can be sold back for 25% of the original price.",vec2(166,136),vec2(236,136))
+        EGP:egpAlign(12,1,1)
+        EGP:egpTextLayout(13,"2. After your time expires, you have to remove ALL your props from the hotel room.",vec2(166,188),vec2(236,193))
+        EGP:egpAlign(13,1,1)
+        EGP:egpTextLayout(14,"3. " + Name + " is not responsible for any items lost for any reason including raiding.",vec2(166,239),vec2(236,253))
+        EGP:egpAlign(14,1,1)
+        EGP:egpRoundedBox(15,vec2(216,425),vec2(100,30))
+        EGP:egpColor(15,vec(0,135,68))
+        EGP:egpText(16,"Agree",vec2(216,425))
+        EGP:egpAlign(16,1,1)
+        EGP:egpRoundedBox(17,vec2(356,425),vec2(100,30))
+        EGP:egpColor(17,vec(214,45,32))
+        EGP:egpText(18,"Disagree",vec2(356,425))
+        EGP:egpAlign(18,1,1)
+    }
+}
+timer("tick3",100) 
+}
+if(clk("tick3")) {
+function system2() {
+    if(Stage == 2) {
+        EGP:egpCircle(7,vec2(75,75),vec2(40,40))
+        EGP:egpColor(7,vec(145,0,255))
+        EGP:egpText(5,"1",vec2(75,75))
+        EGP:egpAlign(5,1,1)
+        EGP:egpSize(5,40)
+        EGP:egpBox(21,vec2(75,130),vec2(6,30))
+        EGP:egpColor(21,vec(145,0,255))
+        EGP:egpRoundedBox(18,vec2(75,155),vec2(40,40))
+        EGP:egpColor(18,vec(145,0,255))
+        EGP:egpText(19,"2",vec2(75,155))
+        EGP:egpAlign(19,1,1)
+        EGP:egpSize(19,40)
+        EGP:egpTextLayout(20,"Choose your room and duration",vec2(100,50),vec2(366,100))
+        EGP:egpAlign(20,1,1)
+        EGP:egpSize(20,40)
+        
+        if(Is1[1,number] > 0) {
+        EGP:egpRoundedBox(55,vec2(200,200),vec2(150,100))
+        EGP:egpColor(55,vec(25,25,25))
+        EGP:egpTextLayout(66,"SOLD OUT",vec2(130,95),vec2(140,150))
+        EGP:egpAlign(66,1,1)
+        EGP:egpSize(66,30)
+        }
+        else {
+        EGP:egpRoundedBox(22,vec2(200,200),vec2(150,100))
+        EGP:egpColor(22,vec(45,45,45))
+        EGP:egpTextLayout(24,"Room 1",vec2(130,95),vec2(140,150))
+        EGP:egpAlign(24,1,1)
+        EGP:egpSize(24,30)
+        }
+        
+        EGP:egpTextLayout(23,Roomtexts[1,string],vec2(130,140),vec2(140,150))
+        EGP:egpAlign(23,1,1)
+        
+        if(Is2[1,number] > 0) {
+        EGP:egpRoundedBox(56,vec2(370,200),vec2(150,100))
+        EGP:egpColor(56,vec(25,25,25))
+        EGP:egpTextLayout(67,"SOLD OUT",vec2(240,95),vec2(260,150))
+        EGP:egpAlign(67,1,1)
+        EGP:egpSize(67,30)
+        }
+        else {
+        EGP:egpRoundedBox(25,vec2(370,200),vec2(150,100))
+        EGP:egpColor(25,vec(45,45,45))
+        EGP:egpTextLayout(28,"Room 2",vec2(240,95),vec2(260,150))
+        EGP:egpAlign(28,1,1)
+        EGP:egpSize(28,30)
+        }
+        
+        EGP:egpTextLayout(27,Roomtexts[2,string],vec2(305,135),vec2(130,150))
+        EGP:egpAlign(27,1,1)
+        
+        if(Is3[1,number] > 0) {
+        EGP:egpRoundedBox(57,vec2(200,310),vec2(150,100))
+        EGP:egpColor(57,vec(25,25,25))
+        EGP:egpTextLayout(68,"SOLD OUT",vec2(130,190),vec2(140,190))
+        EGP:egpAlign(68,1,1)
+        EGP:egpSize(68,30)
+        }
+        else {
+        EGP:egpRoundedBox(29,vec2(200,310),vec2(150,100))
+        EGP:egpColor(29,vec(45,45,45))
+        EGP:egpTextLayout(31,"Room 3",vec2(130,190),vec2(140,190))
+        EGP:egpAlign(31,1,1)
+        EGP:egpSize(31,30)
+        }
+        
+        EGP:egpTextLayout(30,Roomtexts[3,string],vec2(130,200),vec2(140,250))
+        EGP:egpAlign(30,1,1)
+        
+        if(Is4[1,number] > 0) {
+        EGP:egpRoundedBox(58,vec2(370,310),vec2(150,100))
+        EGP:egpColor(58,vec(25,25,25))
+        EGP:egpTextLayout(69,"SOLD OUT",vec2(240,185),vec2(260,190))
+        EGP:egpAlign(69,1,1)
+        EGP:egpSize(69,30)
+        }
+        else {
+        EGP:egpRoundedBox(32,vec2(370,310),vec2(150,100))
+        EGP:egpColor(32,vec(45,45,45))
+        EGP:egpAlign(33,1,1)
+        EGP:egpTextLayout(34,"Room 4",vec2(240,185),vec2(260,190))
+        EGP:egpAlign(34,1,1)
+        EGP:egpSize(34,30)
+        }
+        EGP:egpTextLayout(33,Roomtexts[4,string],vec2(305,200),vec2(130,250))
+        EGP:egpAlign(33,1,1)
+        
+        if(Is5[1,number] > 0) {
+        EGP:egpRoundedBox(59,vec2(200,410),vec2(150,90))
+        EGP:egpColor(59,vec(25,25,25))
+        EGP:egpTextLayout(60,"SOLD OUT",vec2(130,290),vec2(140,190))
+        EGP:egpAlign(60,1,1)
+        EGP:egpSize(60,30)
+        }
+        else {
+        EGP:egpRoundedBox(35,vec2(200,410),vec2(150,90))
+        EGP:egpColor(35,vec(45,45,45))
+        EGP:egpTextLayout(37,"Room 5",vec2(130,290),vec2(140,190))
+        EGP:egpAlign(37,1,1)
+        EGP:egpSize(37,30)
+        }
+        EGP:egpColor(35,vec(45,45,45))
+        EGP:egpTextLayout(36,Roomtexts[5,string],vec2(130,280),vec2(140,280))
+        EGP:egpAlign(36,1,1)
+        EGP:egpBox(40,vec2(310,410),vec2(20,20))
+        EGP:egpColor(40,vec(0,135,68))
+        EGP:egpBox(41,vec2(370,410),vec2(100,20))
+        EGP:egpColor(41,vec(45,45,45))
+        EGP:egpBox(42,vec2(410,410),vec2(20,20))
+        EGP:egpColor(42,vec(214,45,32))
+        EGP:egpText(43,"+",vec2(310,410))
+        EGP:egpAlign(43,1,1)
+        EGP:egpText(44,"-",vec2(410,410))
+        EGP:egpAlign(44,1,1)
+        EGP:egpText(45,Dyn:toString() + " Min",vec2(360,410))
+        EGP:egpAlign(45,1,1)
+    }
+}
+timer("tick4",100)
+}
+if(clk("tick4")) {
+function system3() {
+    if(Stage == 3) {
+        EGP:egpCircle(7,vec2(75,75),vec2(40,40))
+        EGP:egpColor(7,vec(145,0,255))
+        EGP:egpText(5,"1",vec2(75,75))
+        EGP:egpAlign(5,1,1)
+        EGP:egpSize(5,40)
+        EGP:egpBox(21,vec2(75,130),vec2(6,30))
+        EGP:egpColor(21,vec(145,0,255))
+        EGP:egpRoundedBox(18,vec2(75,155),vec2(40,40))
+        EGP:egpColor(18,vec(145,0,255))
+        EGP:egpText(19,"2",vec2(75,155))
+        EGP:egpAlign(19,1,1)
+        EGP:egpSize(19,40)
+        EGP:egpTextLayout(20,"Verify your choices",vec2(100,50),vec2(366,100))
+        EGP:egpAlign(20,1,1)
+        EGP:egpSize(20,40)
+        EGP:egpRoundedBox(22,vec2(75,215),vec2(40,40))
+        EGP:egpColor(22,vec(145,0,255))
+        #EGP:egpBox(150,vec2(75,215),vec2(30,30))
+        #EGP:egpMaterial(150,"vgui/store_cart")
+        EGP:egpBox(24,vec2(75,185),vec2(6,30))
+        EGP:egpColor(24,vec(145,0,255))
+        EGP:egpTextLayout(25,"Room " + Cart:toString() + " for " + Dyn:toString() + " minutes",vec2(120,100),vec2(150,150))
+        EGP:egpAlign(25,1,1)
+        EGP:egpSize(25,25)
+        EGP:egpTextLayout(26,Roomtexts[Cart,string],vec2(270,100),vec2(200,150))
+        EGP:egpAlign(26,1,1)
+        EGP:egpSize(26,20)
+        if(Cart == 1) {
+            EGP:egpRoundedBox(91,vec2(276,320),vec2(200,100)) 
+            EGP:egpColor(91,vec(45,45,45)) 
+        }
+        elseif(Cart == 2) {
+            EGP:egpRoundedBox(92,vec2(276,320),vec2(200,100)) 
+            EGP:egpColor(92,vec(45,45,45))    
+        }
+        elseif(Cart == 3) {
+            EGP:egpRoundedBox(93,vec2(276,320),vec2(200,100)) 
+            EGP:egpColor(93,vec(45,45,45))    
+        }
+        elseif(Cart == 4) {
+            EGP:egpRoundedBox(94,vec2(276,320),vec2(200,100)) 
+            EGP:egpColor(94,vec(45,45,45))    
+        }
+        elseif(Cart == 5) {
+            EGP:egpRoundedBox(95,vec2(276,320),vec2(200,100)) 
+            EGP:egpColor(95,vec(45,45,45))    
+        }
+        EGP:egpText(96,"Pay now",vec2(276,320))
+        EGP:egpSize(96,50)
+        EGP:egpAlign(96,1,1)
+        #EGP:egpBox(150,vec2(75,215),vec2(30,30))
+        #EGP:egpMaterial(150,"vgui/store_cart")
+        #EGP:egpBox(151,vec2(74,155),vec2(30,30))
+        #EGP:egpMaterial(151,"gui/info")
+        }
+    }
+    timer("tick10",100) 
+}
+if(clk("tick10")) {
+    function system4() {
+        if(Stage == 4) {
+            EGP:egpCircle(7,vec2(75,75),vec2(40,40))
+            EGP:egpColor(7,vec(145,0,255))
+            EGP:egpText(5,"1",vec2(75,75))
+            EGP:egpAlign(5,1,1)
+            EGP:egpSize(5,40)
+            EGP:egpBox(21,vec2(75,130),vec2(6,30))
+            EGP:egpColor(21,vec(145,0,255))
+            EGP:egpRoundedBox(18,vec2(75,155),vec2(40,40))
+            EGP:egpColor(18,vec(145,0,255))
+            EGP:egpText(19,"2",vec2(75,155))
+            EGP:egpAlign(19,1,1)
+            EGP:egpSize(19,40)
+            EGP:egpTextLayout(20,"Waiting for payment...",vec2(100,50),vec2(366,100))
+            EGP:egpAlign(20,1,1)
+            EGP:egpSize(20,40)
+            EGP:egpRoundedBox(22,vec2(75,215),vec2(40,40))
+            EGP:egpColor(22,vec(145,0,255))
+        #EGP:egpBox(150,vec2(75,215),vec2(30,30))
+        #EGP:egpMaterial(150,"vgui/store_cart")
+            EGP:egpBox(27,vec2(75,185),vec2(6,30))
+            EGP:egpColor(27,vec(145,0,255))
+            EGP:egpBox(26,vec2(75,250),vec2(6,30))
+            EGP:egpColor(26,vec(145,0,255))
+            EGP:egpRoundedBox(24,vec2(75,275),vec2(40,40))
+            EGP:egpColor(24,vec(145,0,255))
+            EGP:egpText(25,"4",vec2(75,275))
+            EGP:egpAlign(25,1,1)
+            EGP:egpSize(25,40)
+            EGP:egpRemove(101)
+            timer("start",10010)
+    }
+}
+timer("tick5",100)
+}
+if(clk("tick5")) {
+        function system5() {
+        if(Stage == 5) {
+            EGP:egpCircle(7,vec2(75,75),vec2(40,40))
+            EGP:egpColor(7,vec(145,0,255))
+            EGP:egpText(5,"1",vec2(75,75))
+            EGP:egpAlign(5,1,1)
+            EGP:egpSize(5,40)
+            EGP:egpBox(21,vec2(75,130),vec2(6,30))
+            EGP:egpColor(21,vec(145,0,255))
+            EGP:egpRoundedBox(18,vec2(75,155),vec2(40,40))
+            EGP:egpColor(18,vec(145,0,255))
+            EGP:egpText(19,"2",vec2(75,155))
+            EGP:egpAlign(19,1,1)
+            EGP:egpSize(19,40)
+            EGP:egpTextLayout(20,"Payment Succeeded!",vec2(100,50),vec2(366,100))
+            EGP:egpAlign(20,1,1)
+            EGP:egpSize(20,40)
+            EGP:egpRoundedBox(22,vec2(75,215),vec2(40,40))
+            EGP:egpColor(22,vec(145,0,255))
+        #EGP:egpBox(150,vec2(75,215),vec2(30,30))
+        #EGP:egpMaterial(150,"vgui/store_cart")
+            EGP:egpBox(27,vec2(75,185),vec2(6,30))
+            EGP:egpColor(27,vec(145,0,255))
+            EGP:egpBox(26,vec2(75,250),vec2(6,30))
+            EGP:egpColor(26,vec(145,0,255))
+            EGP:egpRoundedBox(24,vec2(75,275),vec2(40,40))
+            EGP:egpColor(24,vec(145,0,255))
+            EGP:egpText(25,"4",vec2(75,275))
+            EGP:egpAlign(25,1,1)
+            EGP:egpSize(25,40)
+            EGP:egpBox(30,vec2(75,303),vec2(6,30))
+            EGP:egpColor(30,vec(145,0,255))
+            EGP:egpRoundedBox(28,vec2(75,335),vec2(40,40))
+            EGP:egpColor(28,vec(145,0,255))
+            EGP:egpText(29,"5",vec2(75,335))
+            EGP:egpAlign(29,1,1)
+            EGP:egpSize(29,40)
+            EGP:egpRemove(101)
+            stoptimer("start")
+        }
+    }
+    timer("tick6",100)
+}
+if(clk("tick6")) {
+    function system6() {
+        if(Stage == 6) {
+            EGP:egpCircle(7,vec2(75,75),vec2(40,40))
+            EGP:egpColor(7,vec(145,0,255))
+            EGP:egpText(5,"1",vec2(75,75))
+            EGP:egpAlign(5,1,1)
+            EGP:egpSize(5,40)
+            EGP:egpBox(21,vec2(75,130),vec2(6,30))
+            EGP:egpColor(21,vec(145,0,255))
+            EGP:egpRoundedBox(18,vec2(75,155),vec2(40,40))
+            EGP:egpColor(18,vec(145,0,255))
+            EGP:egpText(19,"2",vec2(75,155))
+            EGP:egpAlign(19,1,1)
+            EGP:egpSize(19,40)
+            EGP:egpTextLayout(20,"Payment Unsuccesful",vec2(100,50),vec2(366,100))
+            EGP:egpAlign(20,1,1)
+            EGP:egpSize(20,40)
+            EGP:egpRoundedBox(22,vec2(75,215),vec2(40,40))
+            EGP:egpColor(22,vec(145,0,255))
+            #EGP:egpBox(150,vec2(75,215),vec2(30,30))
+            #EGP:egpMaterial(150,"vgui/store_cart")
+            EGP:egpBox(27,vec2(75,185),vec2(6,30))
+            EGP:egpColor(27,vec(145,0,255))
+            EGP:egpBox(26,vec2(75,250),vec2(6,30))
+            EGP:egpColor(26,vec(145,0,255))
+            EGP:egpRoundedBox(24,vec2(75,275),vec2(40,40))
+            EGP:egpColor(24,vec(145,0,255))
+            EGP:egpText(25,"4",vec2(75,275))
+            EGP:egpAlign(25,1,1)
+            EGP:egpSize(25,40)
+            EGP:egpBox(30,vec2(75,303),vec2(6,30))
+            EGP:egpColor(30,vec(145,0,255))
+            EGP:egpRoundedBox(28,vec2(75,335),vec2(40,40))
+            EGP:egpColor(28,vec(145,0,255))
+            EGP:egpText(29,"5",vec2(75,335))
+            EGP:egpAlign(29,1,1)
+            EGP:egpSize(29,40)
+            EGP:egpRemove(101)
+            stoptimer("start")
+        }       
+    }
+    Chain = 0
+    start()
+}
+}
+if(EGP:onClick(User,91)) {
+ Stage = 4
+ moneyRequest(User,Cost * Dyn / Min,"Buy Room 1",10)
+Money = 1
+ system()
+ timer("system",100) 
+ #soundPlay(1,0,"buttons/button15.wav")
+}
+if(EGP:onClick(User,92)) {
+ Stage = 4
+ moneyRequest(User,Cost * Dyn / Min,"Buy Room 2",10)
+Money = 1
+timer("money",100)
+ system()
+ timer("system",100) 
+ #soundPlay(1,0,"buttons/button15.wav")
+}
+if(EGP:onClick(User,93)) {
+ Stage = 4
+ moneyRequest(User,Cost * Dyn / Min,"Buy Room 3",10)
+Money = 1
+timer("money",100)
+ system()
+ timer("system",100)   
+ #soundPlay(1,0,"buttons/button15.wav")
+}
+if(EGP:onClick(User,94)) {
+ Stage = 4
+ moneyRequest(User,Cost * Dyn / Min,"Buy Room 4",10)
+Money = 1
+timer("money",100)
+ system()
+ timer("system",100)    
+ #soundPlay(1,0,"buttons/button15.wav")
+}
+if(EGP:onClick(User,95)) {
+ Stage = 4
+ moneyRequest(User,Cost * Dyn / Min,"Buy Room 5",10)
+Money = 1
+timer("money",100)
+ system()   
+ timer("system",100)
+ #soundPlay(1,0,"buttons/button15.wav")
+}
+if(EGP:onClick(User,40)) {
+ Dyn = Dyn + Up
+ if(Dyn <= Min) {Dyn = Min}
+ system() 
+ timer("system",100)
+ #soundPlay(1,0,"buttons/button15.wav")
+}
+if(EGP:onClick(User,42)) {
+ Dyn = Dyn - Up
+ if(Dyn <= Min) {Dyn = Min}
+ system() 
+ timer("system",100)
+ #soundPlay(1,0,"buttons/button15.wav")
+}
+
+if(EGP:onClick(User,4)) {
+ Stage = 1
+ system()   
+ #soundPlay(1,0,"buttons/button15.wav")
+}
+if(EGP:onClick(User,15)) {
+ Stage = 2
+ Guard = 1
+ timer("guard",100)
+ system()  
+ timer("system",100)
+ #soundPlay(1,0,"buttons/button15.wav")
+}
+if(EGP:onClick(User,17)) {
+ Stage = 1
+ start()   
+ #soundPlay(1,0,"buttons/button15.wav")
+}
+if(EGP:onClick(User,101)) {
+ #soundPlay(1,0,"buttons/button15.wav")
+ Stage = Stage - 1
+ if(Stage <= 0) { start() Stage = 1 }
+ else { system(),timer("system",100)}
+}
+if(EGP:onClick(User,22)) {
+ Stage = 3
+ Cart = 1
+ system() 
+ timer("system",100)
+ #soundPlay(1,0,"buttons/button15.wav")
+}
+if(EGP:onClick(User,25)) {
+ Stage = 3
+ Cart = 2
+ system()   
+ timer("system",100)
+ #soundPlay(1,0,"buttons/button15.wav")
+}
+if(EGP:onClick(User,29)) {
+ Stage = 3
+ Cart = 3
+ system()   
+ timer("system",100)
+ #soundPlay(1,0,"buttons/button15.wav")
+}
+if(EGP:onClick(User,32)) {
+ Stage = 3
+ Cart = 4
+ system()   
+ timer("system",100)
+ #soundPlay(1,0,"buttons/button15.wav")
+}
+if(EGP:onClick(User,35)) {
+    if(Guard == 0) {
+        Stage = 3
+        Cart = 5
+        system() 
+        timer("system",100)  
+        #soundPlay(1,0,"buttons/button15.wav")
+    }
+}
+if(clk("guard")) {
+    Guard = 0
+}
+if(clk("start")) {
+    Stage = 1
+    start()   
+}
+if(Money == 1) {
+if(moneyClk("Buy Room 1")) {
+    Bought[1,number] = 1 
+    Stage = 5
+    Is1 = array(Dyn,LastUser,(Cost * Dyn / Min) * 0.25 )
+    system()   
+    timer("system",100)
+    timer("start",10000)
+}
+if(moneyClk("Buy Room 2")) {
+    Bought[2,number] = 1   
+    Stage = 5 
+    Is2 = array(Dyn,LastUser,(Cost * Dyn / Min) * 0.25 )
+    system()   
+    timer("system",100)
+    timer("start",10000)
+}
+if(moneyClk("Buy Room 3")) {
+    Bought[3,number] = 1   
+    Stage = 5 
+    Is3 = array(Dyn,LastUser,(Cost * Dyn / Min) * 0.25 )
+    system()   
+    timer("system",100)
+    timer("start",10000)
+}
+if(moneyClk("Buy Room 4")) {
+    Bought[4,number] = 1   
+    Stage = 5 
+    Is4 = array(Dyn,LastUser,(Cost * Dyn / Min) * 0.25) 
+    system()   
+    timer("system",100)
+    timer("start",10000)
+}
+if(moneyClk("Buy Room 5")) {
+    Bought[5,number] = 1   
+    Stage = 5 
+    Is5 = array(Dyn,LastUser,(Cost * Dyn / Min) * 0.25)
+    system()   
+    timer("system",100)
+    timer("start",10000)
+}
+if(moneyNoClk("Buy Room 1")) { 
+    Stage = 6
+    system()   
+    timer("system",100)
+    timer("start",10000)
+}
+if(moneyNoClk("Buy Room 2")) {
+    Stage = 6  
+    system()   
+    timer("system",100)
+    timer("start",10000)
+}
+if(moneyNoClk("Buy Room 3")) {
+    Stage = 6  
+    system()   
+    timer("system",100)
+    timer("start",10000)
+}
+if(moneyNoClk("Buy Room 4")) {
+    Stage = 6   
+    system()   
+    timer("system",100)
+    timer("start",10000)
+}
+if(moneyNoClk("Buy Room 5")) {
+    Stage = 6 
+    system()   
+    timer("system",100)
+    timer("start",10000)
+}
+}
+if(Expire1 == 1) {
+    Is1 = array()   
+}
+if(Expire2 == 1) {
+    Is2 = array()   
+}
+if(Expire3 == 1) {
+    Is3 = array()   
+}
+if(Expire4 == 1) {
+    Is4 = array()   
+}
+if(Expire5 == 1) {
+    Is5 = array()   
+}
+if(clk("system")) {   
+    Sys = Sys + 1
+    timer("system",100)
+    if(Sys == 1) {
+        system2()   
+    }
+    if(Sys == 2) {
+        system3()   
+    }
+    if(Sys == 3) {
+        system4()   
+    }
+    if(Sys == 4) {
+        system5()   
+    }
+    if(Sys == 5) {
+        system6()   
+        Sys = 0
+        stoptimer("system")
+    }
+}
+if(clk("money")) {
+    Money = 0   
+}

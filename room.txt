@@ -1,0 +1,337 @@
+@name Rooms
+@inputs EGP:wirelink EGP2:wirelink User2:entity User:entity Name:string Is1:array Is2:array Is3:array Is4:array Is5:array Sell
+@outputs Expire1 Expire2 Expire3 Expire4 Expire5 Fade
+@persist Room Time H M Owner:entity Guard
+@autoupdate
+if(first()) {
+    Time = 0
+    function number wirelink:onClick(Player:entity,ID){
+        local P=This:egpPos(ID)
+        local H=This:egpSize(ID)/2
+        return inrange(This:egpCursor(Player),P-H,P+H)
+    } 
+    EGP:egpClear()
+    EGP:egpBox(1,vec2(256,256),vec2(512,2048))
+    EGP:egpColor(1,vec(144,0,255))
+    EGP:egpMaterial(1,"gui/gradient_down")  
+    EGP:egpText(101,H + ":" + M,vec2(256,25))
+    EGP:egpAlign(101,1,1)
+    EGP:egpSize(101,25)
+    EGP2:egpClear()
+    EGP2:egpBox(1,vec2(256,256),vec2(512,2048))
+    EGP2:egpColor(1,vec(144,0,255))
+    EGP2:egpMaterial(1,"gui/gradient_down")  
+    EGP2:egpText(101,H + ":" + M,vec2(256,25))
+    EGP2:egpAlign(101,1,1)
+    EGP2:egpSize(101,25)
+    timer("time",1)
+    Fade = 1
+}
+if(Is1[1,number] >= 1) {
+    Room = 1
+    timer("onetime",2)
+}
+if(Is2[1,number] >= 1) {
+    Room = 2
+    timer("onetime",2)
+}
+if(Is3[1,number] >= 1) {
+    Room = 3
+    timer("onetime",2)
+}
+if(Is4[1,number] >= 1) {
+    Room = 4
+    timer("onetime",2)
+}
+if(Is5[1,number] >= 1) {
+    Room = 5
+    timer("onetime",2)
+}
+if(EGP:onClick(User,4)) {
+    if(User == Owner) {
+        if(Fade == 1 & Guard == 0) { Fade = 0,Guard = 1,timer("guard",200)}
+        elseif(Fade == 0 & Guard == 0) { Fade = 1,Guard = 1,timer("guard",200) }
+    }   
+}
+if(EGP2:onClick(User2,4)) {
+    if(User2 == Owner) {
+        if(Fade == 1 & Guard == 0) { Fade = 0,Guard = 1,timer("guard",200)}
+        elseif(Fade == 0 & Guard == 0) { Fade = 1,Guard = 1,timer("guard",200) }
+    }   
+}
+if(EGP:onClick(User,6)) {
+    if(User == Owner) {
+        if(Room == 1) {
+        moneyGive(Owner,Is1[3,number])
+        EGP:egpClear()
+        EGP:egpBox(1,vec2(256,256),vec2(512,2048))
+        EGP:egpColor(1,vec(144,0,255))
+        EGP:egpMaterial(1,"gui/gradient_down")  
+        EGP:egpText(101,H + ":" + M,vec2(256,25))
+        EGP:egpAlign(101,1,1)
+        EGP:egpSize(101,25)
+        Expire1 = 1
+        timer("exp",10)
+        }
+        if(Room == 2) {
+        moneyGive(Owner,Is2[3,number])
+        EGP:egpClear()
+        EGP:egpBox(1,vec2(256,256),vec2(512,2048))
+        EGP:egpColor(1,vec(144,0,255))
+        EGP:egpMaterial(1,"gui/gradient_down")  
+        EGP:egpText(101,H + ":" + M,vec2(256,25))
+        EGP:egpAlign(101,1,1)
+        EGP:egpSize(101,25)
+        Expire2 = 1
+        timer("exp",10)
+        }
+        if(Room == 3) {
+        moneyGive(Owner,Is3[3,number])
+        EGP:egpClear()
+        EGP:egpBox(1,vec2(256,256),vec2(512,2048))
+        EGP:egpColor(1,vec(144,0,255))
+        EGP:egpMaterial(1,"gui/gradient_down")  
+        EGP:egpText(101,H + ":" + M,vec2(256,25))
+        EGP:egpAlign(101,1,1)
+        EGP:egpSize(101,25)
+        Expire3 = 1
+        timer("exp",10)
+        }
+        if(Room == 4) {
+        moneyGive(Owner,Is4[3,number])
+        EGP:egpClear()
+        EGP:egpBox(1,vec2(256,256),vec2(512,2048))
+        EGP:egpColor(1,vec(144,0,255))
+        EGP:egpMaterial(1,"gui/gradient_down")  
+        EGP:egpText(101,H + ":" + M,vec2(256,25))
+        EGP:egpAlign(101,1,1)
+        EGP:egpSize(101,25)
+        Expire4 = 1
+        timer("exp",10)
+        }
+        if(Room == 5) {
+        moneyGive(Owner,Is5[3,number])
+        EGP:egpClear()
+        EGP:egpBox(1,vec2(256,256),vec2(512,2048))
+        EGP:egpColor(1,vec(144,0,255))
+        EGP:egpMaterial(1,"gui/gradient_down")  
+        EGP:egpText(101,H + ":" + M,vec2(256,25))
+        EGP:egpAlign(101,1,1)
+        EGP:egpSize(101,25)
+        Expire5 = 1
+        timer("exp",10)
+        }
+    }   
+}
+if(EGP2:onClick(User2,6)) {
+    if(User2 == Owner) {
+        if(Room == 1) {
+        moneyGive(Owner,Is1[3,number])
+        EGP2:egpClear()
+        EGP2:egpBox(1,vec2(256,256),vec2(512,2048))
+        EGP2:egpColor(1,vec(144,0,255))
+        EGP2:egpMaterial(1,"gui/gradient_down")  
+        EGP2:egpText(101,H + ":" + M,vec2(256,25))
+        EGP2:egpAlign(101,1,1)
+        EGP2:egpSize(101,25)
+        Expire1 = 1
+        timer("exp",10)
+        }
+        if(Room == 2) {
+        moneyGive(Owner,Is2[3,number])
+        EGP2:egpClear()
+        EGP2:egpBox(1,vec2(256,256),vec2(512,2048))
+        EGP2:egpColor(1,vec(144,0,255))
+        EGP2:egpMaterial(1,"gui/gradient_down")  
+        EGP2:egpText(101,H + ":" + M,vec2(256,25))
+        EGP2:egpAlign(101,1,1)
+        EGP2:egpSize(101,25)
+        Expire2 = 1
+        timer("exp",10)
+        }
+        if(Room == 3) {
+        moneyGive(Owner,Is3[3,number])
+        EGP2:egpClear()
+        EGP2:egpBox(1,vec2(256,256),vec2(512,2048))
+        EGP2:egpColor(1,vec(144,0,255))
+        EGP2:egpMaterial(1,"gui/gradient_down")  
+        EGP2:egpText(101,H + ":" + M,vec2(256,25))
+        EGP2:egpAlign(101,1,1)
+        EGP2:egpSize(101,25)
+        Expire3 = 1
+        timer("exp",10)
+        }
+        if(Room == 4) {
+        moneyGive(Owner,Is4[3,number])
+        EGP2:egpClear()
+        EGP2:egpBox(1,vec2(256,256),vec2(512,2048))
+        EGP2:egpColor(1,vec(144,0,255))
+        EGP2:egpMaterial(1,"gui/gradient_down")  
+        EGP2:egpText(101,H + ":" + M,vec2(256,25))
+        EGP2:egpAlign(101,1,1)
+        EGP2:egpSize(101,25)
+        Expire4 = 1
+        timer("exp",10)
+        }
+        if(Room == 5) {
+        moneyGive(Owner,Is5[3,number])
+        EGP2:egpClear()
+        EGP2:egpBox(1,vec2(256,256),vec2(512,2048))
+        EGP2:egpColor(1,vec(144,0,255))
+        EGP2:egpMaterial(1,"gui/gradient_down")  
+        EGP2:egpText(101,H + ":" + M,vec2(256,25))
+        EGP2:egpAlign(101,1,1)
+        EGP2:egpSize(101,25)
+        Expire5 = 1
+        timer("exp",10)
+        }
+    }   
+}
+if(clk("onetime")) {
+    if(Room == 1) {
+    Time = Is1[1,number]
+    Owner = Is1[2,entity]   
+    stoptimer("onetime")
+    }
+    if(Room == 2) {
+    Time = Is2[1,number]
+    Owner = Is2[2,entity]   
+    stoptimer("onetime")
+    }
+    if(Room == 3) {
+    Time = Is3[1,number]
+    Owner = Is3[2,entity]   
+    stoptimer("onetime")
+    }
+    if(Room == 4) {
+    Time = Is4[1,number]
+    Owner = Is4[2,entity]   
+    stoptimer("onetime")
+    }
+    if(Room == 5) {
+    Time = Is5[1,number]
+    Owner = Is5[2,entity]   
+    stoptimer("onetime")
+    }
+    EGP:egpText(100,"Time left: " + Time + " min",vec2(256,50))
+    EGP:egpAlign(100,1,1)
+    EGP:egpBox(2,vec2(25,100),vec2(50,50))    
+    EGP:egpMaterial(2,"gui/info")
+    EGP:egpText(3,"Owner: " + Owner:name(),vec2(60,100))
+    EGP:egpAlign(3,0,1)
+    EGP:egpSize(3,30)
+    EGP:egpBox(4,vec2(100,35),vec2(150,50))
+    EGP:egpColor(4,vec(144,0,255))
+    EGP:egpText(5,"Toggle door",vec2(100,35))
+    EGP:egpAlign(5,1,1)
+    EGP:egpSize(5,30)
+    EGP:egpBox(6,vec2(412,35),vec2(150,50))
+    EGP:egpColor(6,vec(144,0,255))
+    EGP:egpText(7,"Sell room",vec2(412,35))
+    EGP:egpAlign(7,1,1)
+    EGP:egpSize(7,30)
+    EGP2:egpText(100,"Time left: " + Time + " min",vec2(256,50))
+    EGP2:egpAlign(100,1,1)
+    EGP2:egpBox(2,vec2(25,100),vec2(50,50))    
+    EGP2:egpMaterial(2,"gui/info")
+    EGP2:egpText(3,"Owner: " + Owner:name(),vec2(60,100))
+    EGP2:egpAlign(3,0,1)
+    EGP2:egpSize(3,30)
+    EGP2:egpBox(4,vec2(100,35),vec2(150,50))
+    EGP2:egpColor(4,vec(144,0,255))
+    EGP2:egpText(5,"Toggle door",vec2(100,35))
+    EGP2:egpAlign(5,1,1)
+    EGP2:egpSize(5,30)
+    EGP2:egpBox(6,vec2(412,35),vec2(150,50))
+    EGP2:egpColor(6,vec(144,0,255))
+    EGP2:egpText(7,"Sell room",vec2(412,35))
+    EGP2:egpAlign(7,1,1)
+    EGP2:egpSize(7,30)
+}
+if(clk("time")) {
+    Time = Time - 1
+    timer("time",60000)
+    H = time("hour")
+    M = time("min")
+    if(Room==1) {
+        if(Is1[1,number] <= 1 & Is1[1,number] >= -1 ) {
+            EGP:egpText(100,"Time left: " + Time + " min",vec2(256,50))   
+            EGP2:egpText(100,"Time left: " + Time + " min",vec2(256,50))
+        }
+    }
+    if(Room==2) {
+        if(Is2[1,number] <= 1 & Is2[1,number] >= -1 ) {
+            EGP:egpText(100,"Time left: " + Time + " min",vec2(256,50))   
+            EGP2:egpText(100,"Time left: " + Time + " min",vec2(256,50))
+        }
+    }
+    if(Room==3) {
+        if(Is3[1,number] <= 1 & Is3[1,number] >= -1 ) {
+            EGP:egpText(100,"Time left: " + Time + " min",vec2(256,50))   
+            EGP2:egpText(100,"Time left: " + Time + " min",vec2(256,50))
+        }
+    }
+    if(Room==4) {
+        if(Is4[1,number] <= 1 & Is4[1,number] >= -1 ) {
+            EGP:egpText(100,"Time left: " + Time + " min",vec2(256,50))
+            EGP2:egpText(100,"Time left: " + Time + " min",vec2(256,50))   
+        }
+    }
+    if(Room==5) {
+        if(Is5[1,number] <= 1 & Is5[1,number] >= -1 ) {
+            EGP:egpText(100,"Time left: " + Time + " min",vec2(256,50))   
+            EGP2:egpText(100,"Time left: " + Time + " min",vec2(256,50))
+        }
+    }
+    if(H < 10 & M < 10 ) {
+        EGP:egpText(101,"0" + H + ":0" + M + " UTC",vec2(256,25))
+        EGP2:egpText(101,"0" + H + ":0" + M + " UTC",vec2(256,25))
+    }
+    elseif(H < 10) {
+        EGP:egpText(101,"0" + H + ":" + M + " UTC" ,vec2(256,25))
+        EGP2:egpText(101,"0" + H + ":" + M + " UTC" ,vec2(256,25))
+    }
+    elseif(M < 10) {
+        EGP:egpText(101,"" + H + ":0" + M + " UTC",vec2(256,25))  
+        EGP2:egpText(101,"" + H + ":0" + M + " UTC",vec2(256,25))
+    }
+    else {
+    EGP:egpText(101,H + ":" + M,vec2(256,25))
+    EGP2:egpText(101,H + ":" + M,vec2(256,25))
+    }
+    if(Time == 0) {
+        stoptimer("time")
+        if(Room == 1) {
+            Expire1 = 1
+            timer("exp",10)   
+        }   
+        if(Room == 2) {
+            Expire2 = 1
+            timer("exp",10)   
+        }
+        if(Room == 3) {
+            Expire3 = 1
+            timer("exp",10)   
+        }
+        if(Room == 4) {
+            Expire4 = 1
+            timer("exp",10)   
+        }
+        if(Room == 5) {
+            Expire5 = 1
+            timer("exp",10)   
+        }
+    }   
+}
+if(clk("exp")) {
+    Expire1 = 0
+    Expire2 = 0
+    Expire3 = 0
+    Expire4 = 0
+    Expire5 = 0  
+    Fade = 1
+    reset() 
+}
+if(clk("guard")) {
+    Guard = 0   
+}
